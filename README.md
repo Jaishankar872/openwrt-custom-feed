@@ -1,6 +1,8 @@
-# OpenWrt HelloWorld Custom Feed
+# OpenWrt Custom Feed
 
-This repository contains a simple `helloworld` utility for OpenWrt.
+This repository contains the `helloworld` and `uartcmd` utilities for OpenWrt.
+`uartcmd` sends commands to a USB UART device at `/dev/ttyACM0` using 115200
+baud, 8 data bits, no parity, and 1 stop bit.
 
 ## 1. Add the custom feed
 
@@ -112,3 +114,22 @@ Run the application:
 ```sh
 helloworld
 ```
+
+## USB UART command utility
+
+Select `Utilities -> USB UART Command Utility` in `make menuconfig`, then build
+and install the `uartcmd` package using the same feed steps above with
+`helloworld` replaced by `uartcmd`.
+
+The utility opens `/dev/ttyACM0` for each command and appends a newline:
+
+```sh
+uartcmd -en1
+uartcmd -dis1
+uartcmd -cus "your custom command"
+uartcmd -v
+```
+
+`-en1` sends `Light-1-ON\n`, `-dis1` sends `Light-1-OFF\n`, and `-cus` sends
+the supplied custom command followed by `\n`. `-v` prints the version and
+available commands without opening the serial device.
