@@ -10,6 +10,7 @@ define Package/uartcmd
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=USB UART Command Utility
+  DEPENDS:=+kmod-usb-acm
 endef
 
 define Package/uartcmd/description

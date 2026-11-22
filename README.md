@@ -117,9 +117,33 @@ helloworld
 
 ## USB UART command utility
 
-Select `Utilities -> USB UART Command Utility` in `make menuconfig`, then build
-and install the `uartcmd` package using the same feed steps above with
-`helloworld` replaced by `uartcmd`.
+Update/install the feed package, then select `Utilities -> USB UART Command
+Utility` in `make menuconfig`:
+
+```sh
+cd ~/openwrt
+./scripts/feeds update myfeed
+./scripts/feeds install -p myfeed uartcmd
+make menuconfig
+```
+
+`uartcmd` declares `kmod-usb-acm` as a runtime dependency. OpenWrt will include
+the matching kernel module dependency when building/installing the package.
+The module must match the router's firmware kernel; do not install a module
+built for a different OpenWrt build.
+
+Build the package (note the spelling: `compile`, not `complie`):
+
+```sh
+make package/feeds/myfeed/uartcmd/clean
+make package/feeds/myfeed/uartcmd/compile V=s
+find bin/packages -type f -name 'uartcmd*.apk' -print
+```
+
+Copy the generated `uartcmd` package to the router and install it with `apk`.
+With the matching OpenWrt package repository configured, `apk` resolves the
+`kmod-usb-acm` dependency automatically. Otherwise, install the matching
+`kmod-usb-acm` package built from the same OpenWrt tree as well.
 
 The utility opens `/dev/ttyACM0` for each command and appends a newline:
 
